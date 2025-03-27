@@ -8,7 +8,7 @@
 - [Tech Stack](#tech-stack)
 - [Installation](#installation)
 - [Testing](#testing)
-- [Database Structure](#database-structure)
+- [ScreenShots](#ScreenShots)
 
 </details>
 
@@ -103,79 +103,18 @@ Authentication is handled via **Clerk**, supporting **Google, GitHub, and Email 
     npx cypress open 
     ```
 
-## Database Structure
+## ScreenShots
+### Login Page
+![Login](screenshots/Login.png)
 
-```plantuml
-entity "Ticket" as Ticket {
-    *id: serial [PK]
-    --
-    title: varchar(100)
-    description: text
-    status: ticketStatus
-    ownerId: varchar(32)
-}
+### Dashboard
+![Dashboard](screenshots/Dashboard.png)
 
-entity "TicketConversation" as TicketConversation {
-    *id: serial [PK]
-    --
-    ticketId: integer [FK] -> Ticket.id
-    userId: varchar(32)
-}
+### Submit Ticket
+![Submit Ticket](screenshots/Submit_ticket.png)
 
-entity "TicketScreenshot" as TicketScreenshot {
-    *id: serial [PK]
-    --
-    ticketId: integer [FK] -> Ticket.id
-    url: varchar(255)
-}
+### My Tickets
+![My Tickets](screenshots/My_Tickets.png)
 
-entity "Request" as Request {
-    *id: serial [PK]
-    --
-    userId: varchar(32)
-    status: requestStatus
-    creationDate: timestamp
-}
-
-entity "ItemInRequestList" as ItemInRequestList {
-    *id: serial [PK]
-    --
-    requestId: integer [FK] -> Request.id
-    itemId: integer [FK] -> ShopItem.id
-    status: itemInRequestListStatus
-}
-
-entity "Inventory" as Inventory {
-    *id: serial [PK]
-    --
-    ownerId: varchar(32)
-    itemId: integer [FK] -> ShopItem.id
-    purchaseDate: timestamp
-}
-
-entity "ShopItem" as ShopItem {
-    *id: serial [PK]
-    --
-    name: varchar(255)
-    description: varchar(255)
-    url: varchar(255)
-    categoryId: integer [FK] -> ShopItemCategory.id
-}
-
-entity "ShopItemCategory" as ShopItemCategory {
-    *id: serial [PK]
-    --
-    name: varchar(32)
-    organizationId: varchar(31)
-}
-
-' Relationships
-Request ||--o{ ItemInRequestList : contains
-ItemInRequestList }o--|| Request : belongs to
-ItemInRequestList }o--|| ShopItem : references
-Inventory }o--|| ShopItem : contains
-ShopItem }o--|| ShopItemCategory : belongs to
-
-Ticket ||--o{ TicketConversation : has
-Ticket ||--o{ TicketScreenshot : has
-```
+### Submit Request
+![Submit Request](screenshots/Submit_Request.png)
