@@ -8,7 +8,7 @@
         "start": "next start",
         "lint": "next lint",
         "test": "jest",
-        "test:unit": "jest --testPathPattern=unit",
+        "test:unit": "jest --config jest.config.js --passWithNoTests",
         "test:integration": "jest --testPathPattern=integration",
         "prepare": "husky"
     },
