@@ -64,10 +64,6 @@ jobs:
           node-version: 'lts/*'
           cache: 'npm'
 
-      - name: Prepare .env.local
-        run: |
-          envsubst < .env.template > .env.local
-
       - name: Install Dependencies
         run: |
           sudo apt-get update
