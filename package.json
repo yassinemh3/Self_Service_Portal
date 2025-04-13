@@ -9,7 +9,7 @@
         "lint": "next lint",
         "test": "jest",
         "test:unit": "jest --config jest.config.js --passWithNoTests",
-        "test:integration": "jest --config jest.config.js",
+        "test:integration": "jest --config=jest.integration.config.js",
         "prepare": "husky"
     },
     "dependencies": {
