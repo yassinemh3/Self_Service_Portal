@@ -53,6 +53,14 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+  
+    env:
+      DB_HOSTNAME: localhost  # Changed from 'postgres' to 'localhost'
+      DB_PORT: 5432
+      DB_NAME: self_service_test
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/self_service_test
 
     steps:
       - name: Checkout Code
@@ -69,6 +77,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gettext
           envsubst < .env.template > .env.local
+          cat .env.local 
           npm ci
 
       - name: Wait for Postgres
