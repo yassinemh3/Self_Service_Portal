@@ -22,10 +22,6 @@ describe("ShopItemCategoryRepository Integration Tests", () => {
     });
 
     describe("createShopItemCategory", () => {
-         beforeEach(async () => {
-                await db.delete(shopItem);
-                await db.delete(shopItemCategory);
-        });
         it("should create a shop item category successfully", async () => {
             const categoryData = {
                 name: "Test Category",
