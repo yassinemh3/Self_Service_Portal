@@ -4,65 +4,79 @@ import {ItemInRequestStatusEnum, RequestStatusEnum} from "@lib/data/entities";
 import { eq } from "drizzle-orm";
 
 describe("ItemInRequestListRepository Integration Tests", () => {
-    let repository: ItemInRequestListRepository;
+ let repository: ItemInRequestListRepository;
 
     beforeAll(async () => {
-        // Initialize the repository
         repository = new ItemInRequestListRepository();
+        
+        // Clear all tables in the correct order to respect foreign key constraints
         await db.delete(itemInRequestList);
         await db.delete(request);
-        await db.delete(shopItem); // Clean up shop_item
-        await db.delete(shopItemCategory); // Clean up shopItemCategory
+        await db.delete(shopItem);
+        await db.delete(shopItemCategory);
 
+        // Insert base test data that will be referenced
+        await db.insert(shopItemCategory).values({
+            id: 1,
+            name: "Test Category",
+            organizationId: "org_123456789012345678901234567",
+        });
+
+        await db.insert(shopItem).values([
+            {
+                id: 20,
+                name: "Item 20",
+                description: "Description for Item 20",
+                url: "https://example.com/item20",
+                categoryId: 1,
+                stock: 10,
+                organizationId: "org_123456789012345678901234567",
+            },
+            {
+                id: 21,
+                name: "Item 21",
+                description: "Description for Item 21",
+                url: "https://example.com/item21",
+                categoryId: 1,
+                stock: 10,
+                organizationId: "org_123456789012345678901234567",
+            }
+        ]);
+
+        // Insert a base request that will be referenced
+        await db.insert(request).values({
+            id: 10,
+            userId: "user_123456789012345678901234561",
+            status: RequestStatusEnum.Processing,
+            creationDate: new Date(),
+            organizationId: "org_123456789012345678901234567",
+            updateDate: null,
+        });
+    });
+
+    beforeEach(async () => {
+        // Clear only the table we're testing against before each test
+        await db.delete(itemInRequestList);
     });
 
     afterAll(async () => {
+        // Clean up in reverse order of dependencies
         await db.delete(itemInRequestList);
         await db.delete(request);
         await db.delete(shopItem);
         await db.delete(shopItemCategory);
     });
-
     describe("createItemInRequestList", () => {
         it("should create an item in request list", async () => {
-            await db.insert(shopItemCategory).values({
-                id: 1,
-                name: "Test Category",
-                organizationId: "org_123456789012345678901234567",
-            });
-
-            // Insert test data into the shop_item table
-            await db.insert(shopItem).values([
-                {
-                    id: 20,
-                    name: "Item 20",
-                    description: "Description for Item 101",
-                    url: "https://example.com/item20",
-                    categoryId: 1, // Use the valid categoryId
-                    stock: 10,
-                    organizationId: "org_123456789012345678901234567",
-                }
-            ]);
-
-            // Insert test data into the request table
-            const request1 = {
-                id: 10,
-                userId: "user_123456789012345678901234561",
-                status: RequestStatusEnum.Processing,
-                creationDate: new Date(),
-                organizationId: "org_123456789012345678901234567",
-                updateDate: null,
-            };
-            await db.insert(request).values(request1);
             const insertData = {
-                requestId: 10,
-                itemId: 20,
+                requestId: 10,  // Using the request created in beforeAll
+                itemId: 20,    // Using the shop item created in beforeAll
                 quantity: 5,
                 organizationId: "org_123456789012345678901234567",
             };
-
+    
             const result = await repository.createItemInRequestList(insertData);
-
+    
             expect(result).toHaveProperty("id");
             expect(result.requestId).toEqual(insertData.requestId);
             expect(result.itemId).toEqual(insertData.itemId);
@@ -70,7 +84,6 @@ describe("ItemInRequestListRepository Integration Tests", () => {
             expect(result.organizationId).toEqual(insertData.organizationId);
         });
     });
-
     describe("getItemInRequestListById", () => {
         it("should return an item if found", async () => {
             // Insert test data
