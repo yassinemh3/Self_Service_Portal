@@ -6,19 +6,24 @@ describe("ShopItemCategoryRepository Integration Tests", () => {
     let repository: ShopItemCategoryRepository;
 
     beforeAll(async () => {
-        // Initialize the repository
         repository = new ShopItemCategoryRepository();
-
-        // Ensure the database is clean before running tests
-        await db.delete(shopItem);
-        await db.delete(shopItemCategory);
+        await cleanDatabase();
     });
 
-    afterAll(async () => {
-        // Clean up the database after all tests
+    beforeEach(async () => {
+        await cleanDatabase();
+    });
+
+    async function cleanDatabase() {
+        // Clean up in the correct order (child tables first)
         await db.delete(shopItem);
         await db.delete(shopItemCategory);
-
+        // Reset the primary key sequence
+        await db.execute(sql`ALTER SEQUENCE shop_item_category_id_seq RESTART WITH 1`);
+    }
+    afterAll(async () => {
+        // Clean up the database after all tests
+        await cleanDatabase();
     });
 
     describe("createShopItemCategory", () => {
@@ -55,9 +60,6 @@ describe("ShopItemCategoryRepository Integration Tests", () => {
     });
 
     describe("getShopItemCategoryById", () => {
-        beforeEach(async () => {
-            await db.delete(shopItem);
-        });
         it("should retrieve a shop item category by id", async () => {
             // Insert test data
             const testCategory = {
@@ -92,11 +94,6 @@ describe("ShopItemCategoryRepository Integration Tests", () => {
     });
 
     describe("getAllShopItemCategories", () => {
-        beforeEach(async () => {
-            await db.delete(shopItemCategory);
-            await db.delete(shopItem);
-        });
-
         it("should retrieve all shop item categories", async () => {
             // Insert test data
             const testCategories = [
@@ -122,9 +119,6 @@ describe("ShopItemCategoryRepository Integration Tests", () => {
     });
 
     describe("updateShopItemCategory", () => {
-        beforeEach(async () => {
-            await db.delete(shopItem);
-        });
         it("should update a shop item category successfully", async () => {
             // Insert test data
             const testCategory = {
@@ -173,12 +167,6 @@ describe("ShopItemCategoryRepository Integration Tests", () => {
     });
 
     describe("getAllShopItemCategoriesInOrganization", () => {
-
-        beforeEach(async () => {
-            await db.delete(shopItem);
-            await db.delete(shopItemCategory);
-        });
-
         it("should retrieve all shop item categories for a given organization", async () => {
             // Insert test data
             const testCategories = [
@@ -219,10 +207,6 @@ describe("ShopItemCategoryRepository Integration Tests", () => {
     });
 
     describe("deleteShopItemCategory", () => {
-        beforeEach(async () => {
-            await db.delete(shopItem);
-        });
-
         it("should delete a shop item category successfully", async () => {
             // Insert test data
             const testCategory = {
