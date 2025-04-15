@@ -22,11 +22,11 @@ describe("ShopItemCategoryRepository Integration Tests", () => {
     });
 
     describe("createShopItemCategory", () => {
-        it("should create a shop item category successfully", async () => {
-             beforeEach(async () => {
+         beforeEach(async () => {
                 await db.delete(shopItem);
                 await db.delete(shopItemCategory);
-                });
+        });
+        it("should create a shop item category successfully", async () => {
             const categoryData = {
                 name: "Test Category",
                 organizationId: "org_123456789012345678901234567",
