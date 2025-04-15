@@ -75,6 +75,10 @@ describe("InventoryRepository Integration Tests", () => {
 
         // Ensure the database is clean before running tests
         await db.delete(inventory);
+        await db.delete(request);
+        await db.delete(itemInRequestList);
+        await db.delete(shopItem);
+        await db.delete(shopItemCategory);
     });
 
     afterAll(async () => {
