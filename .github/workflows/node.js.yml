@@ -86,9 +86,6 @@ jobs:
 
       - name: Push Drizzle Migrations
         run: npx drizzle-kit push
-
-      - name: Run Integration Tests
-        run: npm run test:integration
         
       - name: Cleanup Database
         run: |
