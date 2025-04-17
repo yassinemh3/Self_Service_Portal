@@ -161,10 +161,10 @@ describe("InventoryRepository Integration Tests", () => {
 
     describe("getInventoryById", () => {
         beforeEach(async () => {
-            // Clean up all relevant tables before each test
+            // Delete in reverse order of dependencies
+            await db.delete(itemInRequestList);
             await db.delete(inventory);
             await db.delete(request);
-            await db.delete(itemInRequestList);
             await db.delete(shopItem);
             await db.delete(shopItemCategory);
         });
@@ -298,11 +298,12 @@ describe("InventoryRepository Integration Tests", () => {
     describe("deleteInventory", () => {
         beforeEach(async () => {
             // Clean up all relevant tables before each test
+            await db.delete(shopItemCategory);
             await db.delete(inventory);
-            await db.delete(itemInRequestList);
             await db.delete(request);
             await db.delete(shopItem);
-            await db.delete(shopItemCategory);
+            await db.delete(itemInRequestList);
+
         });
 
         it("should delete an inventory from the database", async () => {

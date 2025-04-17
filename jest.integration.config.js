@@ -1,5 +1,6 @@
 // jest.integration.config.js
 module.exports = {
+  maxWorkers: 1, // Run tests serially
   preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: ['**/test/integration/**/*.test.ts'],

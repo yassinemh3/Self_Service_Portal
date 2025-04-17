@@ -18,8 +18,7 @@ describe("ShopItemCategoryRepository Integration Tests", () => {
         // Clean up in the correct order (child tables first)
         await db.delete(shopItem);
         await db.delete(shopItemCategory);
-        // Reset the primary key sequence
-        await db.execute(sql`ALTER SEQUENCE shop_item_category_id_seq RESTART WITH 1`);
+
     }
     afterAll(async () => {
         // Clean up the database after all tests

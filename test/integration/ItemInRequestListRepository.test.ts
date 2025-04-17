@@ -54,11 +54,6 @@ describe("ItemInRequestListRepository Integration Tests", () => {
         });
     });
 
-    beforeEach(async () => {
-        // Clear only the table we're testing against before each test
-        await db.delete(itemInRequestList);
-    });
-
     afterAll(async () => {
         // Clean up in reverse order of dependencies
         await db.delete(itemInRequestList);
@@ -74,9 +69,9 @@ describe("ItemInRequestListRepository Integration Tests", () => {
                 quantity: 5,
                 organizationId: "org_123456789012345678901234567",
             };
-    
+
             const result = await repository.createItemInRequestList(insertData);
-    
+
             expect(result).toHaveProperty("id");
             expect(result.requestId).toEqual(insertData.requestId);
             expect(result.itemId).toEqual(insertData.itemId);
