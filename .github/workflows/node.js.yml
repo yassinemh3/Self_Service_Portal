@@ -55,7 +55,7 @@ jobs:
           --health-retries 5
   
     env:
-      DB_HOSTNAME: localhost  # Changed from 'postgres' to 'localhost'
+      DB_HOSTNAME: localhost  
       DB_PORT: 5432
       DB_NAME: self_service_test
       DB_USER: postgres
@@ -87,3 +87,11 @@ jobs:
       - name: Push Drizzle Migrations
         run: npx drizzle-kit push
         
+      - name: Run Integration Tests
+        run: npm run test:integration
+
+      - name: Cleanup Database
+        if: always()  # Runs even if previous steps fail
+        run: |
+          psql -h localhost -U postgres -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'self_service_test' AND pid <> pg_backend_pid()"
+          psql -h localhost -U postgres -c "DROP DATABASE IF EXISTS self_service_test"
