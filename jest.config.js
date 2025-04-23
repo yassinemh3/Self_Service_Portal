@@ -1,7 +1,10 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testMatch: ['**/test/unit/**/*.test.ts'],
+  testMatch: [
+  '**/test/unit/**/*.test.ts',      // backend unit tests
+  '**/test/Frontend/**/*.test.ts'   // frontend unit tests
+  ],
   globals: {
     'ts-jest': {
       tsconfig: 'tsconfig.jest.json'
