@@ -78,6 +78,7 @@ jobs:
       DB_USER: postgres
       DB_PASSWORD: postgres
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/self_service_test
+      CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
 
     steps:
       - name: Checkout Code
