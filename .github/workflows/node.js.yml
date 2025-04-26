@@ -10,8 +10,35 @@ on:
       - main
 
 jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      integration: ${{ steps.filter.outputs.integration }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Detect changes
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+              - 'test/unit/backend/**'
+            frontend:
+              - 'frontend/**'
+              - 'test/unit/frontend/**'
+            integration:
+              - 'test/integration/**'
+              - 'backend/**'
+              - 'frontend/**'
+
   build:
     runs-on: ubuntu-latest
+    needs: detect-changes
     env:
       CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
     steps:
@@ -29,12 +56,14 @@ jobs:
           sudo apt-get install -y gettext
           envsubst < .env.template > .env.local
           npm ci
+
       - name: Build Project
         run: npm run build
 
   backend-unit-tests:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build, detect-changes]
+    if: needs.detect-changes.outputs.backend == 'true'
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -50,12 +79,14 @@ jobs:
           sudo apt-get install -y gettext
           envsubst < .env.template > .env.local
           npm ci
+
       - name: Run Backend Unit Tests
         run: npm test -- --testPathPattern='test/unit'
 
   frontend-unit-tests:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build, detect-changes]
+    if: needs.detect-changes.outputs.frontend == 'true'
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -71,12 +102,14 @@ jobs:
           sudo apt-get install -y gettext
           envsubst < .env.template > .env.local
           npm ci
+
       - name: Run Frontend Unit Tests
         run: npm test -- --testPathPattern='test/Frontend'
 
   integration-tests:
     runs-on: ubuntu-latest
-    needs: [backend-unit-tests, frontend-unit-tests]
+    needs: [backend-unit-tests, frontend-unit-tests, detect-changes]
+    if: needs.detect-changes.outputs.integration == 'true'
     services:
       postgres:
         image: postgres:15
@@ -99,7 +132,6 @@ jobs:
       DB_PASSWORD: postgres
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/self_service_test
       CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -114,11 +146,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gettext
           envsubst < .env.template > .env.local
-          cat .env.local 
           npm ci
+
       - name: Wait for Postgres
         run: |
           until pg_isready -h localhost -U postgres; do sleep 2; done
+
       - name: Push Drizzle Migrations
         run: npx drizzle-kit push
 
