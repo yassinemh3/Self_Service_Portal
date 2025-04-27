@@ -66,14 +66,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
-
-      - name: Cache node modules
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          cache: 'npm'
 
       - name: Install Dependencies
         run: |
@@ -103,14 +96,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
-
-      - name: Cache node modules
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          cache: 'npm'
 
       - name: Install Dependencies
         run: |
@@ -199,14 +185,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
-
-      - name: Cache node modules
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          cache: 'npm'
 
       - name: Install Dependencies
         run: |
