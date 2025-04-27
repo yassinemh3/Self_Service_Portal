@@ -102,6 +102,30 @@ Authentication is handled via **Clerk**, supporting **Google, GitHub, and Email 
     ```bash
     npx cypress open 
     ```
+## CI/CD Pipeline Overview
+
+This repository uses GitHub Actions to automate the continuous integration and deployment process. The pipeline is configured to run on every push to the `main` branch and on pull requests targeting the `main` branch. The CI/CD pipeline is designed to run tests, build the project, and deploy it if necessary. It also includes optimizations like caching and path filters to speed up the process.
+
+### Pipeline Flow
+
+The pipeline consists of the following steps:
+
+1. **Detect Changes:**
+   - Determines which parts of the codebase have changed and selectively runs the necessary jobs.
+
+2. **Build:**
+   - Builds the project after changes are detected and dependencies are installed.
+
+3. **Run Tests:**
+   - Runs unit tests for the backend, frontend, and integration tests, depending on the changes detected.
+
+### Key Features
+
+- **Path Filtering:** The pipeline intelligently runs only the relevant tests or builds based on the directories or files modified in the commit.
+
+- **Commit Message Filters:** You can control which jobs to run using specific tags in your commit messages such as `#only-backend`, `#only-frontend`, and `#only-integration`.
+
+- **Caching:** The pipeline uses caching for dependencies (npm) to reduce execution time.
 
 ## ScreenShots
 ### Login Page
