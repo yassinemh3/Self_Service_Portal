@@ -35,7 +35,7 @@ jobs:
               - 'package-lock.json'
               - 'middleware.ts'
               - 'drizzle.config.ts        
-              - '.env.template'
+              - 'env.template'
             frontend:
               - 'app/**'
               - '!app/_lib/**'
@@ -43,7 +43,7 @@ jobs:
               - 'jest.config.js'
               - 'package.json'
               - 'package-lock.json'
-              - '.env.template'
+              - 'env.template'
             
             integration:
               - 'test/integration/**'
@@ -53,7 +53,7 @@ jobs:
               - 'package.json'
               - 'package-lock.json'
               - 'jest.integration.config.js'
-              - '.env.template'
+              - 'env.template'
 
   build:
     runs-on: ubuntu-latest
