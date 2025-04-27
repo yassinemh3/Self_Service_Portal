@@ -34,7 +34,7 @@ Authentication is handled via **Clerk**, supporting **Google, GitHub, and Email 
 - **Cloudinary Integration**: Attach screenshots to support tickets.
 - **Next.js & API Routes**: Efficient handling of requests with server-side logic.
 - **PostgreSQL + Drizzle ORM**: Robust and scalable database setup.
-- **CI/CD Pipeline
+- **CI/CD Pipeline**
 
 ## Tech Stack
 
