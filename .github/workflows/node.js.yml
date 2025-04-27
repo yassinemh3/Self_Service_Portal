@@ -36,6 +36,7 @@ jobs:
               - 'middleware.ts'
               - 'drizzle.config.ts'
               - '.env.template'
+              - '!.github/workflows/**'
             frontend:
               - 'app/**'
               - '!app/_lib/**'
@@ -44,7 +45,7 @@ jobs:
               - 'package.json'
               - 'package-lock.json'
               - '.env.template'
-              - '!./github/workflows/**'
+              - '!.github/workflows/**'
             integration:
               - 'test/integration/**'
               - 'db/**'
@@ -54,6 +55,7 @@ jobs:
               - 'package-lock.json'
               - 'jest.integration.config.js'
               - '.env.template'
+              - '!.github/workflows/**'
 
   build:
     runs-on: ubuntu-latest
